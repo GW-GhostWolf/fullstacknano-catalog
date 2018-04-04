@@ -9,90 +9,16 @@
             This is my header bar
         </header>
         <main>
+            {% for category in categories %}
             <article class="category">
-                <h2>Category 1</h2>
+                <h2>{{ category.name }}</h2>
                 <section>
-                    <div>Item 1</div>
-                    <div>Item 2</div>
+                    {% for item in category.items %}
+                    <div>{{ item.name }}</div>
+                    {% endfor %}
                 </section>
             </article>
-            <article class="category">
-                <h2>Category 4</h2>
-                <section>
-                    <div>Item 1</div>
-                    <div>Item 2</div>
-                </section>
-            </article>
-            <article class="category">
-                <h2>Category 1</h2>
-                <section>
-                    <div>Item 1</div>
-                    <div>Item 2</div>
-                </section>
-            </article>
-            <article class="category">
-                <h2>Category 4</h2>
-                <section>
-                    <div>Item 1</div>
-                    <div>Item 2</div>
-                </section>
-            </article>
-            <article class="category">
-                <h2>Category 1</h2>
-                <section>
-                    <div>Item 1</div>
-                    <div>Item 2</div>
-                </section>
-            </article>
-            <article class="category">
-                <h2>Category 4</h2>
-                <section>
-                    <div>Item 1</div>
-                    <div>Item 2</div>
-                </section>
-            </article>
-            <article class="category">
-                <h2>Category 1</h2>
-                <section>
-                    <div>Item 1</div>
-                    <div>Item 2</div>
-                </section>
-            </article>
-            <article class="category">
-                <h2>Category 4</h2>
-                <section>
-                    <div>Item 1</div>
-                    <div>Item 2</div>
-                </section>
-            </article>
-            <article class="category">
-                <h2>Category 1</h2>
-                <section>
-                    <div>Item 1</div>
-                    <div>Item 2</div>
-                </section>
-            </article>
-            <article class="category">
-                <h2>Category 4</h2>
-                <section>
-                    <div>Item 1</div>
-                    <div>Item 2</div>
-                </section>
-            </article>
-            <article class="category">
-                <h2>Category 1</h2>
-                <section>
-                    <div>Item 1</div>
-                    <div>Item 2</div>
-                </section>
-            </article>
-            <article class="category">
-                <h2>Category 4</h2>
-                <section>
-                    <div>Item 1</div>
-                    <div>Item 2</div>
-                </section>
-            </article>
+            {% endfor %}
         </main>
     </body>
 </html>

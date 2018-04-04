@@ -2,6 +2,7 @@
 # Web server for categories application using flask
 
 from flask import Flask, jsonify, render_template
+import json
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -19,14 +20,16 @@ session = dbSession()
 @app.route("/home")
 @app.route("/categories")
 def getCategories():
-    categories = session.query(Category).all()
-    return render_template("categories.html")
+    categories = session.query(Category)\
+            .join("items")\
+            .all()
+    return render_template("categories.html", categories=categories)
 
 
 @app.route("/categories.json")
 def CategoryJson():
-    categories = session.query(Category).all()
-    return jsonify(Categories=[c.serialize for c in categories])
+    categories = session.query(Category).join("items").all()
+    return jsonify(Categories=[c.serializable for c in categories])
 
 @app.route("/catalog/<string:category_name>/")
 def CategoryName(category_name):
