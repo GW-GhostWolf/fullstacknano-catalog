@@ -27,7 +27,7 @@ header {
     border-radius: 18px 18px 0 0;
     box-shadow: 0px 3px 3px grey;
     color: white;
-    font-size: x-large;
+    font-size: xx-large;
     padding: 20px;
 }
 
@@ -35,6 +35,63 @@ main {
     margin: 5px 2px 10px 2px;
     overflow-x: hidden;
     overflow-y: auto;
+}
+
+article {
+    background: lightgray;
+    border: 1px solid;
+    border-radius: 5px;
+    margin: 5px;
+    padding: 5px;
+}
+
+article > div {
+    border-bottom: 1px solid;
+    font-size: x-large;
+    padding-bottom: 2px;
+}
+
+section {
+    padding: 5px;
+}
+
+section > div {
+    padding: 1px 5px;
+}
+
+.row {
+    display: flex;
+}
+
+.flex {
+    flex: 1;
+}
+
+.button {
+    background: green;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    margin: auto;
+    padding: 5px 10px;
+}
+
+.button:hover {
+    background: darkgreen;
+}
+
+.button-round {
+    border-radius: 50%;
+    color: white;
+    font-size: large;
+    height: 1.5em;
+    padding: 0;
+    width: 1.5em;
+}
+
+.clickable:hover {
+    background-color: rgba(25, 25, 25, 0.15);
+    cursor: pointer;
 }
 
 @media screen and (min-width: 480px) {

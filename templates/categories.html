@@ -5,16 +5,20 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
     </head>
     <body>
-        <header>
-            This is my header bar
+        <header class="row">
+            <span class="flex">Sports Equipment</span>
+            <button class="button" title="Login">Login</button>
         </header>
         <main>
             {% for category in categories %}
-            <article class="category">
-                <h2>{{ category.name }}</h2>
+            <article>
+                <div class="row">
+                    <span class="flex">{{ category.name }}</span>
+                    <button class="button button-round" title="New Item">+</button>
+                </div>
                 <section>
                     {% for item in category.items %}
-                    <div>{{ item.name }}</div>
+                    <div class="clickable">{{ item.name }}</div>
                     {% endfor %}
                 </section>
             </article>
