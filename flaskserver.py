@@ -17,13 +17,21 @@ session = dbSession()
 
 
 @app.route("/")
-@app.route("/home")
 @app.route("/categories")
 def getCategories():
     categories = session.query(Category)\
             .join("items")\
             .all()
     return render_template("categories.html", categories=categories)
+
+
+@app.route("/category/<int:catId>/item/<int:itemId>")
+def editItem(catId, itemId):
+    category = session.query(Category).filter(Category.id==catId).one()
+    if(itemId == 0):
+        return render_template("editItem.html", category=category, item="")
+    item = session.query(Item).filter(Item.id==itemId).one()
+    return render_template("editItem.html", category=category, item=item)
 
 
 @app.route("/categories.json")

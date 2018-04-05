@@ -7,22 +7,18 @@
     <body>
         <header class="row">
             <span class="flex">Sports Equipment</span>
-            <a class="button" title="Login">Login</a>
+            <button class="button" title="Login">Login</button>
         </header>
         <main>
-            {% for category in categories %}
             <article>
                 <div class="row">
                     <span class="flex">{{ category.name }}</span>
-                    <a href="category/{{ category.id }}/item/0" class="button button-round" title="New Item">+</a>
                 </div>
                 <section>
-                    {% for item in category.items %}
-                    <a href="category/{{ category.id }}/item/{{ item.id }}" class="clickable">{{ item.name }}</a>
-                    {% endfor %}
+                    <label>Name: </label>
+                    <input type="text" value="{{ item.name }}" />
                 </section>
             </article>
-            {% endfor %}
         </main>
     </body>
 </html>

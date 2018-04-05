@@ -55,8 +55,11 @@ section {
     padding: 5px;
 }
 
-section > div {
+section > a {
+    color: inherit;
+    display: block;
     padding: 1px 5px;
+    text-decoration: none;
 }
 
 .row {
@@ -68,12 +71,17 @@ section > div {
 }
 
 .button {
+    align-items: center;
     background: green;
     border: none;
     border-radius: 5px;
     color: white;
+    display: flex;
+    font-size: medium;
+    justify-content: center;
     margin: auto;
     padding: 5px 10px;
+    text-decoration: none;
 }
 
 .button:hover {
