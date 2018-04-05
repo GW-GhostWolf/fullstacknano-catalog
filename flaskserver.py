@@ -29,7 +29,8 @@ def getCategories():
 def editItem(catId, itemId):
     category = session.query(Category).filter(Category.id==catId).one()
     if(itemId == 0):
-        return render_template("editItem.html", category=category, item="")
+        item = Item(id=0, name="", description="", cat_id=category.id)
+        return render_template("editItem.html", category=category, item=item)
     item = session.query(Item).filter(Item.id==itemId).one()
     return render_template("editItem.html", category=category, item=item)
 

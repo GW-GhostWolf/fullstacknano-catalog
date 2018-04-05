@@ -38,7 +38,7 @@ main {
 }
 
 article {
-    background: lightgray;
+    background: whitesmoke  ;
     border: 1px solid;
     border-radius: 5px;
     margin: 5px;
@@ -59,11 +59,15 @@ section > a {
     color: inherit;
     display: block;
     padding: 1px 5px;
+}
+
+a {
     text-decoration: none;
 }
 
 .row {
     display: flex;
+    margin-bottom: 5px;
 }
 
 .flex {
@@ -79,9 +83,8 @@ section > a {
     display: flex;
     font-size: medium;
     justify-content: center;
-    margin: auto;
+    margin: auto 5px;
     padding: 5px 10px;
-    text-decoration: none;
 }
 
 .button:hover {
@@ -100,6 +103,18 @@ section > a {
 .clickable:hover {
     background-color: rgba(25, 25, 25, 0.15);
     cursor: pointer;
+}
+
+textarea {
+    resize: vertical;
+}
+
+input, textarea {
+    border: 1px solid rgba(25,25,25,.3);
+    border-radius: 5px;
+    flex: 1;
+    margin: auto 5px;
+    padding: 1px 5px;
 }
 
 @media screen and (min-width: 480px) {

@@ -7,7 +7,7 @@
     <body>
         <header class="row">
             <span class="flex">Sports Equipment</span>
-            <button class="button" title="Login">Login</button>
+            <a href="/"><button class="button" type="button">Login</button></a>
         </header>
         <main>
             <article>
@@ -15,8 +15,23 @@
                     <span class="flex">{{ category.name }}</span>
                 </div>
                 <section>
-                    <label>Name: </label>
-                    <input type="text" value="{{ item.name }}" />
+                    <!-- action intentionally omitted to post back to current page -->
+                    <form method="POST">
+                        <input type="hidden" value="{{ item.id }}" />
+                        <input type="hidden" value="{{ item.cat_id }}" />
+                        <label for="name">Name: </label>
+                        <div class="row">
+                            <input id="name" type="text" value="{{ item.name }}" />
+                        </div>
+                        <label for="description">Description: </label>
+                        <div class="row">
+                            <textarea id="description" rows="5">{{ item.description }}</textarea>
+                        </div>
+                        <div class="row">
+                            <button type="submit" class="button">Save</button>
+                            <a href="/"><button class="button" type="button">Cancel</button></a>
+                        </div>
+                    </form>
                 </section>
             </article>
         </main>
