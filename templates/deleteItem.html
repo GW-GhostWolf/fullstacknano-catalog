@@ -20,9 +20,12 @@
                         <label>
                             Are you sure that you want to delete {{ item.name }} from {{ item.category.name }}?
                         </label>
+                        <div class="row"></div>
                         <div class="row">
                             <button type="submit" class="button">Delete</button>
-                            <a href="/item/{{ item.id }}"><button class="button" type="button">Cancel</button></a>
+                            <a href="{{ url_for('viewItem', itemId=item.id) }}">
+                                <button class="button" type="button">Cancel</button>
+                            </a>
                         </div>
                     </form>
                 </section>

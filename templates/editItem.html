@@ -28,7 +28,9 @@
                         </div>
                         <div class="row">
                             <button type="submit" class="button">Save</button>
-                            <a href="/"><button class="button" type="button">Cancel</button></a>
+                            <a href="{{ url_for('viewItem', itemId=item.id) }}">
+                                <button class="button" type="button">Cancel</button>
+                            </a>
                         </div>
                     </form>
                 </section>
