@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Equipment Catalog</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+    </head>
+    <body>
+        <header class="row">
+            <span class="flex">Sports Equipment</span>
+            <a href="/"><button class="button" type="button">Login</button></a>
+        </header>
+        <main>
+            <article>
+                <div class="row">
+                    <span class="flex">{{ item.category.name }}</span>
+                </div>
+                <section>
+                    <!-- action intentionally omitted to post back to current page -->
+                    <form method="POST">
+                        <input type="hidden" value="{{ item.id }}" />
+                        <input type="hidden" value="{{ item.cat_id }}" />
+                        <label for="name">Name: </label>
+                        <div class="row">
+                            <input id="name" type="text" value="{{ item.name }}" disabled />
+                        </div>
+                        <label for="description">Description: </label>
+                        <div class="row">
+                            <textarea id="description" rows="5" disabled>{{ item.description }}</textarea>
+                        </div>
+                        <div class="row">
+                            <a href="/item/{{ item.id }}/edit"><button class="button" type="button">Edit</button></a>
+                            <a href="/item/{{ item.id }}/delete"><button class="button" type="button">Delete</button></a>
+                            <a href="/"><button class="button" type="button">Back</button></a>
+                        </div>
+                    </form>
+                </section>
+            </article>
+        </main>
+    </body>
+</html>

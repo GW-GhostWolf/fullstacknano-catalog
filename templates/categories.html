@@ -14,11 +14,11 @@
             <article>
                 <div class="row">
                     <span class="flex">{{ category.name }}</span>
-                    <a href="category/{{ category.id }}/item/0" class="button button-round" title="New Item">+</a>
+                    <a href="category/{{ category.id }}/newItem" class="button button-round" title="New Item">+</a>
                 </div>
                 <section>
                     {% for item in category.items %}
-                    <a href="category/{{ category.id }}/item/{{ item.id }}" class="clickable">{{ item.name }}</a>
+                    <a href="/item/{{ item.id }}" class="clickable">{{ item.name }}</a>
                     {% endfor %}
                 </section>
             </article>
