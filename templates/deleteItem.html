@@ -12,23 +12,17 @@
         <main>
             <article>
                 <div class="row">
-                    <span class="flex">{{ category.name }}</span>
+                    <span class="flex">Confirmation</span>
                 </div>
                 <section>
                     <!-- action intentionally omitted to post back to current page -->
                     <form method="POST">
-                        <input type="hidden" value="{{ item.id }}" />
-                        <label for="name">Name: </label>
+                        <label>
+                            Are you sure that you want to delete {{ item.name }} from {{ item.category.name }}?
+                        </label>
                         <div class="row">
-                            <input id="name" type="text" value="{{ item.name }}" />
-                        </div>
-                        <label for="description">Description: </label>
-                        <div class="row">
-                            <textarea id="description" rows="5">{{ item.description }}</textarea>
-                        </div>
-                        <div class="row">
-                            <button type="submit" class="button">Save</button>
-                            <a href="/"><button class="button" type="button">Cancel</button></a>
+                            <button type="submit" class="button">Delete</button>
+                            <a href="/item/{{ item.id }}"><button class="button" type="button">Cancel</button></a>
                         </div>
                     </form>
                 </section>

@@ -15,10 +15,8 @@
                     <span class="flex">{{ item.category.name }}</span>
                 </div>
                 <section>
-                    <!-- action intentionally omitted to post back to current page -->
-                    <form method="POST">
-                        <input type="hidden" value="{{ item.id }}" />
-                        <input type="hidden" value="{{ item.cat_id }}" />
+                    <!-- form is for view consistency and will not post -->
+                    <form>
                         <label for="name">Name: </label>
                         <div class="row">
                             <input id="name" type="text" value="{{ item.name }}" disabled />
