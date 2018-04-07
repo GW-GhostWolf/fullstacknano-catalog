@@ -20,11 +20,11 @@
                         <input type="hidden" value="{{ item.id }}" />
                         <label for="name">Name: </label>
                         <div class="row">
-                            <input id="name" type="text" value="{{ item.name }}" />
+                            <input id="name" name="name" type="text" value="{{ item.name }}" />
                         </div>
                         <label for="description">Description: </label>
                         <div class="row">
-                            <textarea id="description" rows="5">{{ item.description }}</textarea>
+                            <textarea id="description" name="description" rows="5">{{ item.description }}</textarea>
                         </div>
                         <div class="row">
                             <button type="submit" class="button">Save</button>

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # Web server for categories application using flask
 
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, redirect, render_template, request, url_for
 import json
 
 from sqlalchemy import create_engine
@@ -16,20 +16,22 @@ dbSession = sessionmaker(bind=engine)
 session = dbSession()
 
 
-@app.route("/")
+@app.route("/", methods=["GET"])
 @app.route("/categories", methods=["GET"])
 def getCategories():
-    categories = session.query(Category)\
-            .join("items")\
-            .all()
+    categories = session.query(Category).outerjoin("items").all()
     return render_template("categories.html", categories=categories)
 
 
 @app.route("/category/<int:catId>/newItem", methods=["GET", "POST"])
 def newItem(catId):
-    if request.method == 'POST':
-        # TODO - save the new item
-        ""
+    if request.method == "POST":
+        newItem = Item(name=request.form["name"],
+            description=request.form["description"],
+            cat_id=catId)
+        session.add(newItem)
+        session.commit()
+        return redirect(url_for("viewItem", itemId=newItem.id))
     else:
         category = session.query(Category).filter(Category.id==catId).one()
         item = Item(id=0, name="", description="", cat_id=category.id)
@@ -44,24 +46,25 @@ def viewItem(itemId):
 
 @app.route("/item/<int:itemId>/edit", methods=["GET", "POST"])
 def editItem(itemId):
-    if request.method == 'POST':
-        # TODO - save the updates to the existing item
-        ""
+    item = session.query(Item).join("category").filter(Item.id==itemId).one()
+    if request.method == "POST":
+        item.name = request.form["name"]
+        item.description = request.form["description"]
+        session.commit()
+        return redirect(url_for("viewItem", itemId=itemId))
     else:
-        item = (session.query(Item).join("category")
-            .filter(Item.id==itemId).one())
         return render_template("editItem.html",
             category=item.category, item=item)
 
 
 @app.route("/item/<int:itemId>/delete", methods=["GET", "POST"])
 def deleteItem(itemId):
-    if request.method == 'POST':
-        # TODO - delete the item
-        ""
+    item = session.query(Item).join("category").filter(Item.id==itemId).one()
+    if request.method == "POST":
+        session.delete(item)
+        session.commit()
+        return redirect(url_for("getCategories"))
     else:
-        item = (session.query(Item).join("category")
-            .filter(Item.id==itemId).one())
         return render_template("deleteItem.html", item=item)
 
 
@@ -73,4 +76,4 @@ def CategoryJson():
 
 if(__name__ == "__main__"):
     app.debug = True
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host="0.0.0.0", port=5000)
