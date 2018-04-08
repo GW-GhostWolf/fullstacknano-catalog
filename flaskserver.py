@@ -7,7 +7,7 @@ from flask import session as login_session, make_response
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from oauth2client.client import flow_from_clientsecrets, FlowExchangeError
-import json, random, string, httplib2, requests
+import json, random, string, requests
 
 from db_configuration import Base, Category, Item
 
@@ -37,7 +37,6 @@ def showLogin():
     state = "".join(random.choice(string.ascii_uppercase + string.digits)
                     for x in range(32))
     login_session["state"] = state
-    # return "The current session state is {}".format(login_session["state"])
     return render_template("login.html", STATE=login_session["state"])
 
 
@@ -61,8 +60,7 @@ def googleConnect():
     access_token = credentials.access_token
     url = ("https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={}"
            .format(access_token))
-    h = httplib2.Http()
-    result = json.loads(h.request(url, "GET")[1].decode("utf-8"))
+    result = requests.get(url).json()
     # If there was an error in the access token info, abort.
     if result.get("error") is not None:
         return jsonify(result.get("error")), 500
@@ -104,7 +102,6 @@ def googleConnect():
     output += login_session["picture"]
     output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
     # flash("you are now logged in as {}".format(login_session["username"]))
-    print("done!")
     return output
 
 
@@ -119,10 +116,9 @@ def googleDisconnect():
 
     # Execute HTTP GET request to revoke current token.
     url = "https://accounts.google.com/o/oauth2/revoke?token={}".format(access_token)
-    h = httplib2.Http()
-    result = h.request(url, "GET")[0]
+    result = requests.get(url)
 
-    if result["status"] == "200":
+    if result.status_code == 200:
         # Reset the user's session.
         del login_session["access_token"] 
         del login_session["gplus_id"]
