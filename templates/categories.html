@@ -7,7 +7,7 @@
     <body>
         <header class="row">
             <span class="flex">Sports Equipment</span>
-            <a href="{{ url_for('showLogin') }}"><button class="button" type="button">Login</button></a>
+            <a href="{{ url_for('user_routes.showLogin') }}"><button class="button" type="button">Login</button></a>
         </header>
         <main>
             {% for category in categories %}
