@@ -4,7 +4,7 @@
 # import Blueprint from Flask library for creating routes
 from flask import Blueprint
 # import request / response helpers from Flask
-from flask import jsonify, render_template, request
+from flask import flash, jsonify, redirect, render_template, request, url_for
 # import session helpers from flask
 from flask import session
 # import OAuth helpers from oath2client
@@ -95,15 +95,8 @@ def googleConnect():
     session["picture"] = data["picture"]
     session["email"] = data["email"]
 
-    output = ""
-    output += "<h1>Welcome, "
-    output += session["username"]
-    output += "!</h1>"
-    output += '<img src="'
-    output += session["picture"]
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
-    # flash("you are now logged in as {}".format(session["username"]))
-    return output
+    flash("Logged in as {}".format(session["username"]))
+    return jsonify("Login Success"), 200
 
 
 @user_routes.route("/gdisconnect")
@@ -111,7 +104,7 @@ def googleDisconnect():
     """Revoke current user's token and reset their session."""
 
     # Only disconnect a connected user.
-    access_token = session["access_token"]
+    access_token = session.get("access_token", None)
     if access_token is None:
         return jsonify("Current user not connected."), 401
 
@@ -126,9 +119,11 @@ def googleDisconnect():
         del session["username"]
         del session["email"]
         del session["picture"]
-        return jsonify("Successfully disconnected."), 200
+        flash("You have successfully logged out")
+        return redirect(url_for("getCategories"))
     else:
         # For whatever reason, the given token was invalid.
+        flash("Unable to log out")
         return jsonify("Failed to revoke token for given user."), 400
 
 
