@@ -6,14 +6,17 @@ from flask import Blueprint
 # import request / response helpers from Flask
 from flask import jsonify, render_template, request
 # import session helpers from flask
-from flask import session as login_session
+from flask import session
 # import OAuth helpers from oath2client
 from oauth2client.client import flow_from_clientsecrets, FlowExchangeError
 # SQLAlchemy imports
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 # import core helper libraries
-import json, random, requests, string
+import json
+import random
+import requests
+import string
 
 # import database schema for SQLAlchemy
 from db_configuration import Base, User
@@ -27,7 +30,7 @@ APPLICATION_NAME = "Sports Catalog"
 engine = create_engine("sqlite:///catelog.db")
 Base.metadata.bind = engine
 dbSession = sessionmaker(bind=engine)
-session = dbSession()
+transaction = dbSession()
 
 
 @user_routes.route("/login")
@@ -35,14 +38,14 @@ def showLogin():
     """Create a state token to prevent request forgery"""
     state = "".join(random.choice(string.ascii_uppercase + string.digits)
                     for x in range(32))
-    login_session["state"] = state
-    return render_template("login.html", STATE=login_session["state"])
+    session["state"] = state
+    return render_template("login.html", STATE=session["state"])
 
 
 @user_routes.route("/gconnect", methods=["POST"])
 def googleConnect():
     # Validate state token
-    if request.args.get("state") != login_session["state"]:
+    if request.args.get("state") != session["state"]:
         return jsonify("Invalid state parameter."), 401
     # Obtain authorization code
     code = request.data
@@ -57,9 +60,8 @@ def googleConnect():
 
     # Check that the access token is valid.
     access_token = credentials.access_token
-    url = ("https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={}"
-           .format(access_token))
-    result = requests.get(url).json()
+    url = "https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={}"
+    result = requests.get(url.format(access_token)).json()
     # If there was an error in the access token info, abort.
     if result.get("error") is not None:
         return jsonify(result.get("error")), 500
@@ -73,14 +75,14 @@ def googleConnect():
     if result["issued_to"] != CLIENT_ID:
         return jsonify("Token's client ID does not match app's."), 401
 
-    stored_access_token = login_session.get("access_token")
-    stored_gplus_id = login_session.get("gplus_id")
+    stored_access_token = session.get("access_token")
+    stored_gplus_id = session.get("gplus_id")
     if stored_access_token is not None and gplus_id == stored_gplus_id:
         return jsonify("Current user is already connected."), 200
 
     # Store the access token in the session for later use.
-    login_session["access_token"] = credentials.access_token
-    login_session["gplus_id"] = gplus_id
+    session["access_token"] = credentials.access_token
+    session["gplus_id"] = gplus_id
 
     # Get user info
     userinfo_url = "https://www.googleapis.com/oauth2/v1/userinfo"
@@ -89,18 +91,18 @@ def googleConnect():
 
     data = answer.json()
 
-    login_session["username"] = data["name"]
-    login_session["picture"] = data["picture"]
-    login_session["email"] = data["email"]
+    session["username"] = data["name"]
+    session["picture"] = data["picture"]
+    session["email"] = data["email"]
 
     output = ""
     output += "<h1>Welcome, "
-    output += login_session["username"]
+    output += session["username"]
     output += "!</h1>"
     output += '<img src="'
-    output += login_session["picture"]
+    output += session["picture"]
     output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
-    # flash("you are now logged in as {}".format(login_session["username"]))
+    # flash("you are now logged in as {}".format(session["username"]))
     return output
 
 
@@ -109,22 +111,26 @@ def googleDisconnect():
     """Revoke current user's token and reset their session."""
 
     # Only disconnect a connected user.
-    access_token = login_session["access_token"]
+    access_token = session["access_token"]
     if access_token is None:
         return jsonify("Current user not connected."), 401
 
     # Execute HTTP GET request to revoke current token.
-    url = "https://accounts.google.com/o/oauth2/revoke?token={}".format(access_token)
-    result = requests.get(url)
+    url = "https://accounts.google.com/o/oauth2/revoke?token={}"
+    result = requests.get(url.format(access_token))
 
     if result.status_code == 200:
         # Reset the user's session.
-        del login_session["access_token"] 
-        del login_session["gplus_id"]
-        del login_session["username"]
-        del login_session["email"]
-        del login_session["picture"]
+        del session["access_token"]
+        del session["gplus_id"]
+        del session["username"]
+        del session["email"]
+        del session["picture"]
         return jsonify("Successfully disconnected."), 200
     else:
         # For whatever reason, the given token was invalid.
         return jsonify("Failed to revoke token for given user."), 400
+
+
+if(__name__ == "__main__"):
+    print("This file cannot be run directly")

@@ -1,28 +1,16 @@
-<!doctype html>
-<html lang="en">
-    <head>
-        <title>Equipment Catalog</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
-    </head>
-    <body>
-        <header class="row">
-            <span class="flex">Sports Equipment</span>
-            <a href="{{ url_for('user_routes.showLogin') }}"><button class="button" type="button">Login</button></a>
-        </header>
-        <main>
-            {% for category in categories %}
-            <article>
-                <div class="row">
-                    <span class="flex">{{ category.name }}</span>
-                    <a href="{{ url_for('newItem', catId=category.id) }}" class="button button-round" title="New Item">+</a>
-                </div>
-                <section>
-                    {% for item in category.items %}
-                    <a href="{{ url_for('viewItem', itemId=item.id) }}" class="clickable">{{ item.name }}</a>
-                    {% endfor %}
-                </section>
-            </article>
+{% extends "layout.html" %} 
+{% block body %} 
+    {% for category in categories %}
+    <article>
+        <div class="row">
+            <span class="flex">{{ category.name }}</span>
+            <a href="{{ url_for('newItem', catId=category.id) }}" class="button button-round" title="New Item">+</a>
+        </div>
+        <section>
+            {% for item in category.items %}
+            <a href="{{ url_for('viewItem', itemId=item.id) }}" class="clickable">{{ item.name }}</a>
             {% endfor %}
-        </main>
-    </body>
-</html>
+        </section>
+    </article>
+    {% endfor %} 
+{% endblock %}

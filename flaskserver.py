@@ -7,7 +7,7 @@ from flask import Flask
 # import request / response helpers from Flask
 from flask import jsonify, redirect, render_template, request, url_for
 # import session helpser from flask
-from flask import session as login_session
+from flask import session
 # SQLAlchemy imports
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -23,14 +23,14 @@ app.register_blueprint(user_routes)
 engine = create_engine("sqlite:///catelog.db")
 Base.metadata.bind = engine
 dbSession = sessionmaker(bind=engine)
-session = dbSession()
+transaction = dbSession()
 
 
 @app.route("/", methods=["GET"])
 @app.route("/categories", methods=["GET"])
 def getCategories():
     """Home route displays all items listed by category"""
-    categories = session.query(Category).outerjoin("items").all()
+    categories = transaction.query(Category).outerjoin("items").all()
     return render_template("categories.html", categories=categories)
 
 
@@ -45,11 +45,12 @@ def newItem(catId):
         newItem = Item(name=request.form["name"],
                        description=request.form["description"],
                        cat_id=catId)
-        session.add(newItem)
-        session.commit()
+        transaction.add(newItem)
+        transaction.commit()
         return redirect(url_for("viewItem", itemId=newItem.id))
     else:
-        category = session.query(Category).filter(Category.id == catId).one()
+        category = (transaction.query(Category)
+                    .filter(Category.id == catId).one())
         item = Item(id=0, name="", description="", cat_id=category.id)
         return render_template("editItem.html", category=category, item=item)
 
@@ -57,7 +58,7 @@ def newItem(catId):
 @app.route("/item/<int:itemId>", methods=["GET"])
 def viewItem(itemId):
     """Display all information about a single item"""
-    item = (session.query(Item).join("category")
+    item = (transaction.query(Item).join("category")
             .filter(Item.id == itemId).one())
     return render_template("item.html", item=item)
 
@@ -69,12 +70,12 @@ def editItem(itemId):
     GET requests display form
     POST requests edit item in the database and redirect to item view
     """
-    item = (session.query(Item).join("category")
+    item = (transaction.query(Item).join("category")
             .filter(Item.id == itemId).one())
     if request.method == "POST":
         item.name = request.form["name"]
         item.description = request.form["description"]
-        session.commit()
+        transaction.commit()
         return redirect(url_for("viewItem", itemId=itemId))
     else:
         return render_template("editItem.html",
@@ -88,11 +89,11 @@ def deleteItem(itemId):
     GET requests display confirmation
     POST requests delete the item from the database and redirect to categories
     """
-    item = (session.query(Item).join("category")
+    item = (transaction.query(Item).join("category")
             .filter(Item.id == itemId).one())
     if request.method == "POST":
-        session.delete(item)
-        session.commit()
+        transaction.delete(item)
+        transaction.commit()
         return redirect(url_for("getCategories"))
     else:
         return render_template("deleteItem.html", item=item)
@@ -100,7 +101,7 @@ def deleteItem(itemId):
 
 @app.route("/categories.json", methods=["GET"])
 def CategoryJson():
-    categories = session.query(Category).join("items").all()
+    categories = transaction.query(Category).join("items").all()
     return jsonify(Categories=[c.serializable for c in categories])
 
 

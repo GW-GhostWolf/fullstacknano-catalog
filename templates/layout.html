@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Equipment Catalog</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+    </head>
+    <body>
+        <header class="row">
+            <span class="flex">Sports Equipment</span>
+            {% if not session.username %}
+            <a href="{{ url_for('user_routes.showLogin') }}"><button class="button" type="button">Login</button></a>
+            {% else %}
+            <a href="{{ url_for('user_routes.googleDisconnect') }}"><button class="button" type="button">Logout</button></a>
+            {% endif %}
+        </header>
+        <main>
+            {% block body %}{% endblock %}
+        </main>
+    </body>
+</html>

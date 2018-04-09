@@ -1,35 +1,23 @@
-<!doctype html>
-<html lang="en">
-    <head>
-        <title>Equipment Catalog</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
-    </head>
-    <body>
-        <header class="row">
-            <span class="flex">Sports Equipment</span>
-            <a href="{{ url_for('user_routes.showLogin') }}"><button class="button" type="button">Login</button></a>
-        </header>
-        <main>
-            <article>
-                <div class="row">
-                    <span class="flex">Confirmation</span>
-                </div>
-                <section>
-                    <!-- action intentionally omitted to post back to current page -->
-                    <form method="POST">
-                        <label>
-                            Are you sure that you want to delete {{ item.name }} from {{ item.category.name }}?
-                        </label>
-                        <div class="row"></div>
-                        <div class="row">
-                            <button type="submit" class="button">Delete</button>
-                            <a href="{{ url_for('viewItem', itemId=item.id) }}">
-                                <button class="button" type="button">Cancel</button>
-                            </a>
-                        </div>
-                    </form>
-                </section>
-            </article>
-        </main>
-    </body>
-</html>
+{% extends "layout.html" %} 
+{% block body %} 
+<article>
+    <div class="row">
+        <span class="flex">Confirmation</span>
+    </div>
+    <section>
+        <!-- action intentionally omitted to post back to current page -->
+        <form method="POST">
+            <label>
+                Are you sure that you want to delete {{ item.name }} from {{ item.category.name }}?
+            </label>
+            <div class="row"></div>
+            <div class="row">
+                <button type="submit" class="button">Delete</button>
+                <a href="{{ url_for('viewItem', itemId=item.id) }}">
+                    <button class="button" type="button">Cancel</button>
+                </a>
+            </div>
+        </form>
+    </section>
+</article>
+{% endblock %}
