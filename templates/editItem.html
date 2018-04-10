@@ -17,7 +17,7 @@
                 <textarea id="description" name="description" rows="5">{{ item.description }}</textarea>
             </div>
             <div class="row">
-                {% if session.username %}
+                {% if session.user_id and (not item.id or session.user_id == item.user_id) %}
                 <button type="submit" class="button">Save</button>
                 {% endif %}
                 {% if not item.id %}

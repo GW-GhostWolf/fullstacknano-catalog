@@ -33,6 +33,30 @@ dbSession = sessionmaker(bind=engine)
 transaction = dbSession()
 
 
+# User helper functions
+def createUser(user_info):
+    """Add new user to the database and return the new user id"""
+    newUser = User(name=user_info["username"], email=user_info["email"])
+    transaction.add(newUser)
+    transaction.commit()
+    user = transaction.query(User).filter_by(email=user_info["email"]).one()
+    return user.id
+
+
+def getUserInfo(user_id):
+    """Get user information based on user_id"""
+    user = transaction.query(User).filter_by(id=user_id).one()
+    return user
+
+
+def getUserID(email):
+    """Get user id based on email address"""
+    user = transaction.query(User).filter_by(email=email).first()
+    if user is None:
+        return None
+    return user.id
+
+
 @user_routes.route("/login")
 def showLogin():
     """Create a state token to prevent request forgery"""
@@ -92,8 +116,13 @@ def googleConnect():
     data = answer.json()
 
     session["username"] = data["name"]
-    session["picture"] = data["picture"]
     session["email"] = data["email"]
+
+    # see if user exists, if it doesn't make a new one
+    user_id = getUserID(session["email"])
+    if not user_id:
+        user_id = createUser(session)
+    session["user_id"] = user_id
 
     flash("Logged in as {}".format(session["username"]))
     return jsonify("Login Success"), 200
@@ -114,11 +143,11 @@ def googleDisconnect():
 
     if result.status_code == 200:
         # Reset the user's session.
+        del session["user_id"]
         del session["access_token"]
         del session["gplus_id"]
         del session["username"]
         del session["email"]
-        del session["picture"]
         flash("You have successfully logged out")
         return redirect(url_for("getCategories"))
     else:

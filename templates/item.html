@@ -5,7 +5,7 @@
         <span class="flex">{{ item.category.name }}</span>
     </div>
     <section>
-        <!-- form is for view consistency and will not post -->
+        <!-- form is for view consistency (read only) and will not post -->
         <form>
             <label for="name">Name: </label>
             <div class="row">
@@ -16,7 +16,7 @@
                 <textarea id="description" rows="5" disabled>{{ item.description }}</textarea>
             </div>
             <div class="row">
-                {% if session.username %}
+                {% if session.user_id and session.user_id == item.user_id %}
                 <a href="{{ url_for('editItem', itemId=item.id) }}">
                     <button class="button" type="button">Edit</button>
                 </a>

@@ -6,8 +6,8 @@
 from flask import Flask
 # import request / response helpers from Flask
 from flask import jsonify, redirect, render_template, request, url_for
-# import session helpser from flask
-from flask import session
+# import flash message and session helpers from Flask
+from flask import flash, session
 # SQLAlchemy imports
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -41,12 +41,13 @@ def newItem(catId):
     GET requests display form
     POST requests add item to the database and redirect to item view
     """
-    if "username" not in session:
+    if "user_id" not in session:
         return redirect(url_for("user_routes.showLogin"))
     if request.method == "POST":
         newItem = Item(name=request.form["name"],
                        description=request.form["description"],
-                       cat_id=catId)
+                       cat_id=catId,
+                       user_id=session["user_id"])
         transaction.add(newItem)
         transaction.commit()
         return redirect(url_for("viewItem", itemId=newItem.id))
@@ -72,13 +73,17 @@ def editItem(itemId):
     GET requests display form
     POST requests edit item in the database and redirect to item view
     """
-    if "username" not in session:
+    if "user_id" not in session:
         return redirect(url_for("user_routes.showLogin"))
     item = (transaction.query(Item).join("category")
             .filter(Item.id == itemId).one())
+    if session["user_id"] != item.user_id:
+        flash("You cannot edit items that belong to another user")
+        return redirect(url_for("getCategories"))
     if request.method == "POST":
         item.name = request.form["name"]
         item.description = request.form["description"]
+        item.user_id = session["user_id"]
         transaction.commit()
         return redirect(url_for("viewItem", itemId=itemId))
     else:
@@ -93,10 +98,13 @@ def deleteItem(itemId):
     GET requests display confirmation
     POST requests delete the item from the database and redirect to categories
     """
-    if "username" not in session:
+    if "user_id" not in session:
         return redirect(url_for("user_routes.showLogin"))
     item = (transaction.query(Item).join("category")
             .filter(Item.id == itemId).one())
+    if session["user_id"] != item.user_id:
+        flash("You cannot delete items that belong to another user")
+        return redirect(url_for("getCategories"))
     if request.method == "POST":
         transaction.delete(item)
         transaction.commit()
