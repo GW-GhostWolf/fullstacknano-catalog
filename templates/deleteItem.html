@@ -12,7 +12,9 @@
             </label>
             <div class="row"></div>
             <div class="row">
+                {% if session.username %}
                 <button type="submit" class="button">Delete</button>
+                {% endif %}
                 <a href="{{ url_for('viewItem', itemId=item.id) }}">
                     <button class="button" type="button">Cancel</button>
                 </a>

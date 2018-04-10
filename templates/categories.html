@@ -4,7 +4,9 @@
     <article>
         <div class="row">
             <span class="flex">{{ category.name }}</span>
+            {% if session.username %}
             <a href="{{ url_for('newItem', catId=category.id) }}" class="button button-round" title="New Item">+</a>
+            {% endif %}
         </div>
         <section>
             {% for item in category.items %}

@@ -41,6 +41,8 @@ def newItem(catId):
     GET requests display form
     POST requests add item to the database and redirect to item view
     """
+    if "username" not in session:
+        return redirect(url_for("user_routes.showLogin"))
     if request.method == "POST":
         newItem = Item(name=request.form["name"],
                        description=request.form["description"],
@@ -70,6 +72,8 @@ def editItem(itemId):
     GET requests display form
     POST requests edit item in the database and redirect to item view
     """
+    if "username" not in session:
+        return redirect(url_for("user_routes.showLogin"))
     item = (transaction.query(Item).join("category")
             .filter(Item.id == itemId).one())
     if request.method == "POST":
@@ -89,6 +93,8 @@ def deleteItem(itemId):
     GET requests display confirmation
     POST requests delete the item from the database and redirect to categories
     """
+    if "username" not in session:
+        return redirect(url_for("user_routes.showLogin"))
     item = (transaction.query(Item).join("category")
             .filter(Item.id == itemId).one())
     if request.method == "POST":

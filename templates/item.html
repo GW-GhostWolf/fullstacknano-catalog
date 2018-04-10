@@ -16,12 +16,14 @@
                 <textarea id="description" rows="5" disabled>{{ item.description }}</textarea>
             </div>
             <div class="row">
+                {% if session.username %}
                 <a href="{{ url_for('editItem', itemId=item.id) }}">
                     <button class="button" type="button">Edit</button>
                 </a>
                 <a href="{{ url_for('deleteItem', itemId=item.id) }}">
                     <button class="button" type="button">Delete</button>
                 </a>
+                {% endif %}
                 <a href="/"><button class="button" type="button">Back</button></a>
             </div>
         </form>
