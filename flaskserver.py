@@ -16,9 +16,11 @@ from sqlalchemy.orm import sessionmaker
 from db_configuration import Base, Category, Item
 # import route Blueprints for Flask
 from users import user_routes
+from apiv1 import apiv1_routes
 
 app = Flask(__name__)
 app.register_blueprint(user_routes)
+app.register_blueprint(apiv1_routes, url_prefix="/api/v1")
 
 engine = create_engine("sqlite:///catelog.db")
 Base.metadata.bind = engine
@@ -34,7 +36,7 @@ def getCategories():
     return render_template("categories.html", categories=categories)
 
 
-@app.route("/category/<int:catId>/newItem", methods=["GET", "POST"])
+@app.route("/categories/<int:catId>/newItem", methods=["GET", "POST"])
 def newItem(catId):
     """
     Add a new item to the category
@@ -58,7 +60,7 @@ def newItem(catId):
         return render_template("editItem.html", category=category, item=item)
 
 
-@app.route("/item/<int:itemId>", methods=["GET"])
+@app.route("/items/<int:itemId>", methods=["GET"])
 def viewItem(itemId):
     """Display all information about a single item"""
     item = (transaction.query(Item).join("category")
@@ -66,7 +68,7 @@ def viewItem(itemId):
     return render_template("item.html", item=item)
 
 
-@app.route("/item/<int:itemId>/edit", methods=["GET", "POST"])
+@app.route("/items/<int:itemId>/edit", methods=["GET", "POST"])
 def editItem(itemId):
     """
     Edit an item details
@@ -91,7 +93,7 @@ def editItem(itemId):
                                category=item.category, item=item)
 
 
-@app.route("/item/<int:itemId>/delete", methods=["GET", "POST"])
+@app.route("/items/<int:itemId>/delete", methods=["GET", "POST"])
 def deleteItem(itemId):
     """
     Delete an item
@@ -111,12 +113,6 @@ def deleteItem(itemId):
         return redirect(url_for("getCategories"))
     else:
         return render_template("deleteItem.html", item=item)
-
-
-@app.route("/categories.json", methods=["GET"])
-def CategoryJson():
-    categories = transaction.query(Category).join("items").all()
-    return jsonify(Categories=[c.serializable for c in categories])
 
 
 # Run the application if not being imported

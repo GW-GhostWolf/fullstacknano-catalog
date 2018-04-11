@@ -57,14 +57,13 @@ def getUserID(email):
     return user.id
 
 
-@user_routes.route("/login")
-def showLogin():
-    """Create a state token to prevent request forgery"""
-    state = "".join(random.choice(string.ascii_uppercase + string.digits)
+@user_routes.before_request
+def checkState():
+    if "state" not in session:
+        s = "".join(random.choice(string.ascii_uppercase + string.digits)
                     for x in range(32))
-    session["state"] = state
-    return render_template("login.html", STATE=session["state"])
-
+        session["state"] = s
+    
 
 @user_routes.route("/gconnect", methods=["POST"])
 def googleConnect():
