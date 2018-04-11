@@ -52,6 +52,7 @@ def newItem(catId):
                        user_id=session["user_id"])
         transaction.add(newItem)
         transaction.commit()
+        flash("Item successfully added")
         return redirect(url_for("viewItem", itemId=newItem.id))
     else:
         category = (transaction.query(Category)
@@ -87,6 +88,7 @@ def editItem(itemId):
         item.description = request.form["description"]
         item.user_id = session["user_id"]
         transaction.commit()
+        flash("Item successfully updated")
         return redirect(url_for("viewItem", itemId=itemId))
     else:
         return render_template("editItem.html",
@@ -110,6 +112,7 @@ def deleteItem(itemId):
     if request.method == "POST":
         transaction.delete(item)
         transaction.commit()
+        flash("Item successfully deleted")
         return redirect(url_for("getCategories"))
     else:
         return render_template("deleteItem.html", item=item)
