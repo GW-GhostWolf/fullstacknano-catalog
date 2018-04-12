@@ -59,6 +59,7 @@ def getUserID(email):
 
 @user_routes.before_request
 def checkState():
+    """Add state to session to prevent csrf"""
     if "state" not in session:
         s = "".join(random.choice(string.ascii_uppercase + string.digits)
                     for x in range(32))
@@ -67,6 +68,7 @@ def checkState():
 
 @user_routes.route("/gconnect", methods=["POST"])
 def googleConnect():
+    """Connect to Google account token"""
     # Validate state token
     if request.args.get("state") != session["state"]:
         return jsonify("Invalid state parameter."), 401
@@ -130,7 +132,6 @@ def googleConnect():
 @user_routes.route("/gdisconnect")
 def googleDisconnect():
     """Revoke current user's token and reset their session."""
-
     # Only disconnect a connected user.
     access_token = session.get("access_token", None)
     if access_token is None:
@@ -154,6 +155,6 @@ def googleDisconnect():
         flash("Unable to log out")
         return jsonify("Failed to revoke token for given user."), 400
 
-
+# prevent file from attempting to run alone
 if(__name__ == "__main__"):
     print("This file cannot be run directly")
