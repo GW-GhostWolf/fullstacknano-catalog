@@ -44,7 +44,8 @@ def newItem(catId):
     POST requests add item to the database and redirect to item view
     """
     if "user_id" not in session:
-        return redirect(url_for("user_routes.showLogin"))
+        flash("You are not logged in")
+        return redirect(url_for("getCategories"))
     if request.method == "POST":
         newItem = Item(name=request.form["name"],
                        description=request.form["description"],
@@ -77,7 +78,8 @@ def editItem(itemId):
     POST requests edit item in the database and redirect to item view
     """
     if "user_id" not in session:
-        return redirect(url_for("user_routes.showLogin"))
+        flash("You are not logged in")
+        return redirect(url_for("getCategories"))
     item = (transaction.query(Item).join("category")
             .filter(Item.id == itemId).one())
     if session["user_id"] != item.user_id:
@@ -103,7 +105,8 @@ def deleteItem(itemId):
     POST requests delete the item from the database and redirect to categories
     """
     if "user_id" not in session:
-        return redirect(url_for("user_routes.showLogin"))
+        flash("You are not logged in")
+        return redirect(url_for("getCategories"))
     item = (transaction.query(Item).join("category")
             .filter(Item.id == itemId).one())
     if session["user_id"] != item.user_id:

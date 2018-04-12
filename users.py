@@ -4,7 +4,8 @@
 # import Blueprint from Flask library for creating routes
 from flask import Blueprint
 # import request / response helpers from Flask
-from flask import flash, jsonify, redirect, render_template, request, url_for
+from flask import flash, jsonify, render_template, request
+from flask import abort, redirect, url_for
 # import session helpers from flask
 from flask import session
 # import OAuth helpers from oath2client
@@ -64,14 +65,16 @@ def checkState():
         s = "".join(random.choice(string.ascii_uppercase + string.digits)
                     for x in range(32))
         session["state"] = s
-    
+    # verify CSRF state token on post requests
+    if request.method == "POST":
+        if (session["state"] != request.form.get("state")
+            and session["state"] != request.args.get("state")):
+            abort(400)
+
 
 @user_routes.route("/gconnect", methods=["POST"])
 def googleConnect():
     """Connect to Google account token"""
-    # Validate state token
-    if request.args.get("state") != session["state"]:
-        return jsonify("Invalid state parameter."), 401
     # Obtain authorization code
     code = request.data
 

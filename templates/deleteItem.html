@@ -12,6 +12,7 @@
             </label>
             <div class="row"></div>
             <div class="row">
+                <input type="hidden" value="{{ session.state }}" />
                 {% if session.user_id and session.user_id == item.user_id %}
                 <button type="submit" class="button">Delete</button>
                 {% endif %}

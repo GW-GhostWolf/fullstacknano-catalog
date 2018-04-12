@@ -8,6 +8,7 @@
         <!-- action intentionally omitted to post back to current page -->
         <form method="POST">
             <input type="hidden" value="{{ item.id }}" />
+            <input type="hidden" value="{{ session.state }}" />
             <label for="name">Name: </label>
             <div class="row">
                 <input id="name" name="name" type="text" value="{{ item.name }}" />
