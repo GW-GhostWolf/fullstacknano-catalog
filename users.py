@@ -68,7 +68,7 @@ def checkState():
     # verify CSRF state token on post requests
     if request.method == "POST":
         if (session["state"] != request.form.get("state")
-            and session["state"] != request.args.get("state")):
+                and session["state"] != request.args.get("state")):
             abort(400)
 
 
@@ -157,6 +157,7 @@ def googleDisconnect():
         # For whatever reason, the given token was invalid.
         flash("Unable to log out")
         return jsonify("Failed to revoke token for given user."), 400
+
 
 # prevent file from attempting to run alone
 if(__name__ == "__main__"):

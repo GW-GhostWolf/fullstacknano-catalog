@@ -33,7 +33,7 @@ def CategoriesJson():
 def CategoryJson(id):
     """Return specific category with items"""
     category = (transaction.query(Category).filter(Category.id == id)
-                  .join("items").one())
+                .join("items").one())
     return jsonify(Category=category.serializable)
 
 
