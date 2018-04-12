@@ -28,4 +28,5 @@ Configure the initial database
 
 Run the web server using python.
 
+    cd /vagrant
     python3 flaskserver.py
