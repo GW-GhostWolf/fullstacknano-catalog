@@ -4,12 +4,17 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from db_configuration import Base, Category, Item
+from db_configuration import Base, User, Category, Item
 
-engine = create_engine("sqlite:///catelog.db")
+engine = create_engine("postgres://catalog:newcatalogpassword@localhost/catalog")
 Base.metadata.bind = engine
 dbSession = sessionmaker(bind=engine)
 session = dbSession()
+
+# Default users because postgresql fails foreign key checks otherwise
+session.add(User(name="Creator", email="mk.michael.phone@gmail.com"))
+session.add(User(name="Michael", email="michael.poc@att.net"))
+session.commit()
 
 # Equipment for Bouldering
 newCategory = Category(name="Bouldering", user_id=1)

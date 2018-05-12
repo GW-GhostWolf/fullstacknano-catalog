@@ -16,7 +16,7 @@ from db_configuration import Base, Category, Item
 
 apiv1_routes = Blueprint("apiv1_routes", __name__)
 
-engine = create_engine("sqlite:///catelog.db")
+engine = create_engine("postgres://catalog:newcatalogpassword@localhost/catalog")
 Base.metadata.bind = engine
 dbSession = sessionmaker(bind=engine)
 transaction = dbSession()
