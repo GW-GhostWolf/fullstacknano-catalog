@@ -25,7 +25,7 @@ from db_configuration import Base, User
 user_routes = Blueprint("user_routes", __name__)
 
 CLIENT_ID = json.loads(
-    open("client_secrets.json", "r").read())["web"]["client_id"]
+    open("/var/www/flask/client_secrets.json", "r").read())["web"]["client_id"]
 APPLICATION_NAME = "Sports Catalog"
 
 engine = create_engine("postgres://catalog:newcatalogpassword@localhost/catalog")

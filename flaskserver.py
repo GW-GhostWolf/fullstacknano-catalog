@@ -21,6 +21,7 @@ from apiv1 import apiv1_routes
 app = Flask(__name__)
 app.register_blueprint(user_routes)
 app.register_blueprint(apiv1_routes, url_prefix="/api/v1")
+app.secret_key = "LZK82IQ58ICYQA982KOPAXIP"
 
 engine = create_engine("postgres://catalog:newcatalogpassword@localhost/catalog")
 Base.metadata.bind = engine
@@ -123,6 +124,5 @@ def deleteItem(itemId):
 
 # Run the application if not being imported
 if(__name__ == "__main__"):
-    app.secret_key = "LZK82IQ58ICYQA982KOPA"
     app.debug = True
     app.run(host="0.0.0.0", port=5000)
